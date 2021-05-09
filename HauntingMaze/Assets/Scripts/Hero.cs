@@ -36,7 +36,7 @@ public class Hero : MonoBehaviour
     private void Run()
     {
         if (isGrounded) State = States.run;
-
+        var y = transform.position.y + 1.65019;
         Vector3 dir = transform.right * Input.GetAxis("Horizontal");
         transform.position = Vector3.MoveTowards(transform.position, transform.position + dir, speed * Time.deltaTime);
         sprite.flipX = dir.x < 0.0f;
@@ -49,6 +49,7 @@ public class Hero : MonoBehaviour
 
     private void CheckGround()
     {
+        
         Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f);
         isGrounded = collider.Length > 1;
 
