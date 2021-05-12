@@ -5,17 +5,24 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed;
-    public float jumpForce;
+    public float jumpForceValue;
     private float moveInput;
+    private Vector2 moveVelocity;
+    private float jumpForce;
 
     private Rigidbody2D rb;
 
     private bool facingRight = true;
 
-    private bool isGrounded;
-    public Transform groundCheck;
     public float checkRadius;
+
+    [SerializeField] private bool isGrounded;
+    public Transform groundCheck;
     public LayerMask whatIsGround;
+
+    [SerializeField] private bool isWatered;
+    public Transform waterCheck;
+    public LayerMask whatIsWater;
 
     private int extraJumps;
     public int extraJumpsValue;
@@ -23,6 +30,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        jumpForce = jumpForceValue;
         extraJumps = extraJumpsValue;
         rb = GetComponent<Rigidbody2D>();
     }
@@ -30,31 +38,65 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isGrounded == true)
+        if (isGrounded)
             extraJumps = extraJumpsValue;
-        if (Input.GetButtonDown("Jump") && extraJumps > 0)
-        {
-            rb.velocity = Vector2.up * jumpForce;
-            extraJumps--;
-        }
-        else if (Input.GetButtonDown("Jump") && extraJumps == 0 && isGrounded == true)
-        {
-            rb.velocity = Vector2.up * jumpForce;
-        }
 
+        if (!isWatered)
+        {
+            jumpForce = jumpForceValue;
+            Jump();
+            Run();
+        }
+        else
+        {
+            jumpForce = jumpForceValue / 2;
+            Jump();
+            Swim();
+        }
     }
 
-    private void FixedUpdate()
+    private void Swim()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+        Vector2 move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        moveInput = Input.GetAxis("Horizontal");
+        moveVelocity = move.normalized * speed;
+
+        if (facingRight == false && move.x > 0)
+            Flip();
+        else if (facingRight == true && move.x < 0)
+            Flip();
+
+        rb.MovePosition(rb.position + moveVelocity * Time.deltaTime);
+    }
+
+    private void Run()
+    {
+        moveInput = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(speed * moveInput, rb.velocity.y);
 
         if (facingRight == false && moveInput > 0)
             Flip();
         else if (facingRight == true && moveInput < 0)
             Flip();
+    }
+
+    private void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && extraJumps > 0)
+        {
+            rb.velocity = Vector2.up * jumpForce;
+            extraJumps--;
+        }
+        else if (Input.GetButtonDown("Jump") && extraJumps == 0 && isGrounded)
+        {
+            rb.velocity = Vector2.up * jumpForce;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+        isWatered = Physics2D.OverlapCircle(waterCheck.position, checkRadius, whatIsWater);
     }
 
     void Flip()
