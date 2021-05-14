@@ -34,7 +34,7 @@ public class AirBar : MonoBehaviour
         }
         if (playerInWater == false)
         {
-            slider.value += 0.5f;
+            slider.value += 0.05f;
             if (slider.value == 100)
             {
                 slider.gameObject.SetActive(false);
