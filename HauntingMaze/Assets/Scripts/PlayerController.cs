@@ -5,9 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed;
+    public float swimmingSpeed;
     public float jumpForceValue;
+
     private float moveInput;
-    private Vector2 moveVelocity;
+    private float verticalMove;
     private float jumpForce;
 
     private Rigidbody2D rb;
@@ -57,21 +59,20 @@ public class PlayerController : MonoBehaviour
 
     private void Swim()
     {
-        Vector2 move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        verticalMove = Input.GetAxis("Vertical");
+        moveInput = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(swimmingSpeed * moveInput, swimmingSpeed * verticalMove);
 
-        moveVelocity = move.normalized * speed;
 
-        if (facingRight == false && move.x > 0)
+        if (facingRight == false && moveInput > 0)
             Flip();
-        else if (facingRight == true && move.x < 0)
+        else if (facingRight == true && moveInput < 0)
             Flip();
-
-        rb.MovePosition(rb.position + moveVelocity * Time.deltaTime);
     }
 
     private void Run()
     {
-        moveInput = Input.GetAxisRaw("Horizontal");
+        moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(speed * moveInput, rb.velocity.y);
 
         if (facingRight == false && moveInput > 0)
