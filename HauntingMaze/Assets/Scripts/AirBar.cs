@@ -8,6 +8,8 @@ public class AirBar : MonoBehaviour
 {
     public Slider slider;
     public float checkRadius;
+    private float maxValue;
+    private float currentValue;
 
     public Transform waterCheck;
     public LayerMask whatIsWater;
@@ -17,16 +19,22 @@ public class AirBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        maxValue = slider.maxValue;
     }
 
     // Update is called once per frame
     void Update()
     {
+        currentValue = slider.maxValue;
+
         if (playerInWater == true)
         {
             slider.gameObject.SetActive(true);
             slider.value -= 0.01f;
+            if (currentValue - slider.value > 9)
+                slider.maxValue -= 10;
+            if (slider.maxValue < maxValue)
+                slider.maxValue = maxValue;
         }
         if (slider.value <= 0)
         {
@@ -34,6 +42,7 @@ public class AirBar : MonoBehaviour
         }
         if (playerInWater == false)
         {
+            slider.maxValue = 100;
             slider.value += 0.05f;
             if (slider.value == 100)
             {

@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public float swimmingSpeed;
     public float jumpForceValue;
+    public float airValue;
 
     private float moveInput;
     private float verticalMove;
@@ -106,5 +107,21 @@ public class PlayerController : MonoBehaviour
         Vector3 scaler = transform.localScale;
         scaler.x *= -1;
         transform.localScale = scaler;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag.Equals("Air"))
+        {
+            if (AirCollect.slider.value + airValue < AirCollect.slider.maxValue)
+                AirCollect.slider.value += airValue;
+            else
+            {
+                AirCollect.slider.maxValue = AirCollect.slider.value + airValue;
+                AirCollect.slider.value = AirCollect.slider.maxValue;
+            }
+            Destroy(collision.gameObject);
+        }
+
     }
 }
