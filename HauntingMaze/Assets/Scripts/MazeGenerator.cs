@@ -17,7 +17,7 @@ public class MazeGenerator
 {
     public int Width = 15;
     public int Height = 23;
-    public float Shift = 2.00113f;
+    public static float Shift = 2.00113f;
 
 
     public MazeGeneratorCell[,] GetGenerateMaze()
