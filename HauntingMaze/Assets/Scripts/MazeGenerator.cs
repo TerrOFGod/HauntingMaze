@@ -11,6 +11,12 @@ public class MazeGeneratorCell
     public bool WallBottom = true;
 
     public bool Visited = false;
+
+    public MazeGeneratorCell(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
 }
 
 public class MazeGenerator
@@ -28,7 +34,7 @@ public class MazeGenerator
         {
             for (int y = 0; y < maze.GetLength(1); y++)
             {
-                maze[x, y] = new MazeGeneratorCell { X = x, Y = y };
+                maze[x, y] = new MazeGeneratorCell(x, y);
             }
         }
 

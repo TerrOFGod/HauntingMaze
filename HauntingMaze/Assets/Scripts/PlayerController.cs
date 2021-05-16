@@ -65,9 +65,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(swimmingSpeed * moveInput, swimmingSpeed * verticalMove);
 
 
-        if (facingRight == false && moveInput > 0)
-            Flip();
-        else if (facingRight == true && moveInput < 0)
+        if (!facingRight && moveInput > 0 || facingRight && moveInput < 0)
             Flip();
     }
 
@@ -76,9 +74,7 @@ public class PlayerController : MonoBehaviour
         moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(speed * moveInput, rb.velocity.y);
 
-        if (facingRight == false && moveInput > 0)
-            Flip();
-        else if (facingRight == true && moveInput < 0)
+        if (!facingRight && moveInput > 0 || facingRight && moveInput < 0)
             Flip();
     }
 

@@ -10,10 +10,10 @@ public class AirSpawn : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsWater;
 
-    public int selectXMin;
     public int selectXMax;
-    public int selectYMin;
     public int selectYMax;
+
+    public static List<MazeGeneratorCell> targets;
 
     private Vector2 whereSpawn;
     private bool isWater;
@@ -22,10 +22,13 @@ public class AirSpawn : MonoBehaviour
     private float nextSpawn = 0f;
     private float spawnRate = 0.5f;
 
+    private int X;
+    private int Y;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        targets = new List<MazeGeneratorCell>();
     }
 
     // Update is called once per frame
@@ -34,20 +37,18 @@ public class AirSpawn : MonoBehaviour
         if (Time.time > nextSpawn)
         {
             nextSpawn = Time.time + spawnRate;
-            whereSpawn = new Vector2(rnd.Next(selectXMin, selectXMax) * MazeGenerator.Shift, rnd.Next(selectYMin, selectYMax) * MazeGenerator.Shift);
+            X = rnd.Next(selectXMax);
+            Y = rnd.Next(selectYMax);
+            whereSpawn = new Vector2(X * MazeGenerator.Shift, Y * MazeGenerator.Shift);
             isWater = Physics2D.OverlapCircle(whereSpawn, checkRadius, whatIsWater);
 
             if (countOfAir > 0 && isWater)
             {
                 Instantiate(air, whereSpawn, Quaternion.identity);
                 air.SetActive(true);
+                targets.Add(MazeSpawner.Maze[X, Y]);
                 countOfAir--;
             }
         }
     }
-
-    //private void FixedUpdate()
-    //{
-    //    isWater = Physics2D.OverlapCircle(whereSpawn, checkRadius, whatIsWater);
-    //}
 }
