@@ -16,7 +16,7 @@ public class Greed
         return cell.X > -1 && cell.X < 15 && cell.Y > -1 && cell.Y < 23;
     }
 
-    private IEnumerable<MazeGeneratorCell> GetNextPoints(MazeGeneratorCell current, MazeGeneratorCell[,] maze)
+    private IEnumerable<MazeGeneratorCell> GetNextPoints(MazeGeneratorCell current)
     {
         for (int x = -1; x <= 1; x++)
             for (int y = -1; y <= 1; y++)
@@ -24,14 +24,28 @@ public class Greed
                 if (x == 0 && y == 0) continue;
                 if (x * y == 0)
                 {
-                    var nextPoint = maze[current.X + x, current.Y + y];
-                    if (InsideMaze(nextPoint) && (!nextPoint.WallBottom || !nextPoint.WallLeft))
-                        yield return nextPoint;
+                    var nextCell = GetCellCheckWalls(current, x, y);
+                    if (nextCell != null)
+                        yield return nextCell;
                 }
             }
     }
 
-    public IEnumerable<List<MazeGeneratorCell>> GetPathsByDijkstra(MazeGeneratorCell[,] maze, MazeGeneratorCell start,
+    private MazeGeneratorCell GetCellCheckWalls(MazeGeneratorCell current, int x, int y)
+    {
+        var possibleCell = new MazeGeneratorCell(current.X + x, current.Y + y);
+        if (InsideMaze(possibleCell))
+        {
+            var nextCell = MazeSpawner.Maze[current.X + x, current.Y + y];
+            if (x < 0 && !current.WallLeft || x > 0 && !nextCell.WallLeft)
+                return nextCell;
+            if (y < 0 && !current.WallBottom || y > 0 && !nextCell.WallBottom)
+                return nextCell;
+        }
+        return null;
+    }
+
+    public IEnumerable<List<MazeGeneratorCell>> GetPathsByDijkstra(MazeGeneratorCell start,
     IEnumerable<MazeGeneratorCell> targets)
     {
         var visited = new HashSet<MazeGeneratorCell>();
@@ -46,7 +60,7 @@ public class Greed
             if (toOpen == new MazeGeneratorCell(-1, -1)) yield break;
             if (targets.Contains(toOpen))
                 yield return GetPath(toOpen, track);
-            foreach (var point in GetNextPoints(toOpen, maze))
+            foreach (var point in GetNextPoints(toOpen))
             {
                 int currentPrice = track[toOpen].Price + 1;
                 if (!track.ContainsKey(point) || track[point].Price > currentPrice)
@@ -78,7 +92,7 @@ public class Greed
     {
         var result = new List<MazeGeneratorCell>();
         int cost = track[currentPoint].Price;
-        while (currentPoint != new MazeGeneratorCell(-1, -1))
+        while (currentPoint.X != -1 && currentPoint.Y != -1)
         {
             result.Add(currentPoint);
             currentPoint = track[currentPoint].Previous;

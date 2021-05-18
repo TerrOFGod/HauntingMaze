@@ -46,7 +46,8 @@ public class AirSpawn : MonoBehaviour
             {
                 Instantiate(air, whereSpawn, Quaternion.identity);
                 air.SetActive(true);
-                targets.Add(MazeSpawner.Maze[X, Y]);
+                if (!targets.Contains(MazeSpawner.Maze[X, Y]))
+                    targets.Add(MazeSpawner.Maze[X, Y]);
                 countOfAir--;
             }
         }

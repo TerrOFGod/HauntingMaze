@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Air
   - Water
+  - Ghost
   layers:
   - Default
   - TransparentFX
