@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class AirBar : MonoBehaviour
 {
+    public GameObject death;
+    public GameObject buttons;
     public Slider slider;
     public float checkRadius;
     private float maxValue;
@@ -30,7 +32,7 @@ public class AirBar : MonoBehaviour
         if (playerInWater == true)
         {
             slider.gameObject.SetActive(true);
-            slider.value -= 0.01f;
+            slider.value -= 0.1f;
             if (currentValue - slider.value > 9)
                 slider.maxValue -= 10;
             if (slider.maxValue < maxValue)
@@ -38,7 +40,9 @@ public class AirBar : MonoBehaviour
         }
         if (slider.value <= 0)
         {
-            Console.WriteLine("Game Over");
+            Time.timeScale = 0f;
+            buttons.SetActive(false);
+            death.SetActive(true);
         }
         if (playerInWater == false)
         {
