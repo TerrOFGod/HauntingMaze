@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject death;
+    public GameObject buttons;
     public float speed;
     public float swimmingSpeed;
     public float jumpForceValue;
@@ -119,5 +121,11 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject);
         }
 
+        if (collision.tag.Equals("Ghost"))
+        {
+            Time.timeScale = 0f;
+            buttons.SetActive(false);
+            death.SetActive(true);
+        }
     }
 }

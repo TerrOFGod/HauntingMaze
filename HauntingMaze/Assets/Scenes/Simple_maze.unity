@@ -1543,6 +1543,14 @@ PrefabInstance:
       propertyPath: m_BounceIntensity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3843904174091030865, guid: 7fe6f5a0b49ac39428a4279165685c34, type: 3}
+      propertyPath: death
+      value: 
+      objectReference: {fileID: 185876059}
+    - target: {fileID: 3843904174091030865, guid: 7fe6f5a0b49ac39428a4279165685c34, type: 3}
+      propertyPath: buttons
+      value: 
+      objectReference: {fileID: 391822496}
     - target: {fileID: 6317685005570262126, guid: 7fe6f5a0b49ac39428a4279165685c34, type: 3}
       propertyPath: m_RootOrder
       value: 7
